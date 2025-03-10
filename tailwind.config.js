@@ -6,8 +6,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#030014",
-        secondary: "#151312",
+        primary: "#1E0822",
+        secondary: "#471351",
+        search: "#330D3B",
+        rank: "#621A70",
         light: {
           100: "#D6C7FF",
           200: "#A8B5DB",
@@ -17,7 +19,7 @@ module.exports = {
           100: "#221F3D",
           200: "#0F0D23",
         },
-        accent: "#AB8BFF",
+        accent: "#C866DC",
       },
     },
   },

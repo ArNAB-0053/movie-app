@@ -13,7 +13,6 @@ const MovieCard = ({
     return (
         <Link href={`/movie/${id}`} asChild>
             <TouchableOpacity className="w-[30%] space-y-2">
-                {/* Movie Poster */}
                 <View className="relative">
                     <Image
                         source={{
@@ -25,7 +24,6 @@ const MovieCard = ({
                         resizeMode="cover"
                     />
 
-                    {/* 18+ Badge */}
                     {adult && (
                         <View className="absolute top-2 right-2 bg-red-600 px-2 py-1 rounded-lg">
                             <Text className="text-xs font-bold text-white">18+</Text>
@@ -33,12 +31,10 @@ const MovieCard = ({
                     )}
                 </View>
 
-                {/* Movie Title */}
                 <Text className="text-sm font-bold text-light-300 mt-1" numberOfLines={1}>
                     {title}
                 </Text>
 
-                {/* Rating & Star Icon */}
                 <View className="flex-row items-center gap-x-2">
                     <Image source={icons.star} className="size-4 tint-yellow-400" />
                     <Text className="text-xs text-light-300 font-bold">
@@ -46,7 +42,6 @@ const MovieCard = ({
                     </Text>
                 </View>
 
-                {/* Release Year & Category */}
                 <View className="flex-row items-center justify-between">
                     <Text className="text-xs text-light-400 font-medium">
                         {release_date?.split("-")[0]}

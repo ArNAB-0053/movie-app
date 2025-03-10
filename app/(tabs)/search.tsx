@@ -39,7 +39,7 @@ const Search = () => {
     return (
         <View className="flex-1 bg-primary">
             <Image
-                source={images.bg}
+                source={images.bgg}
                 className="flex-1 absolute w-full z-0"
                 resizeMode="cover"
             />
@@ -58,8 +58,10 @@ const Search = () => {
                 contentContainerStyle={{ paddingBottom: 100 }}
                 ListHeaderComponent={
                     <>
-                        <View className="w-full flex-row justify-center mt-20 items-center">
-                            <Image source={icons.logo} className="w-12 h-10" />
+                        <Image source={icons.logo} className="w-[12rem] h-[12rem] shadow-md shadow-zinc-300 mt-20 mx-auto " />
+                        <View className="flex-row items-center justify-center mb-5">
+                            <Text className="text-light-200 text-center italic">Lights. Camera.</Text>
+                            <Text className="text-purple-400 text-center font-bold"> Popcorn!</Text>
                         </View>
 
                         <View className="my-5">
