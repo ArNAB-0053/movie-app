@@ -1,5 +1,6 @@
 import { icons } from '@/constants/icons'
 import {View, Text, Image, TextInput} from 'react-native'
+
 const SearchBar = ({placeholder, onPress}: {
     placeholder?: string,
     onPress?: () => void,
