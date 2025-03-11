@@ -13,10 +13,10 @@ const TabIcon = ({icon, name, focused}: {
         return (
             <ImageBackground
                 source={images.highlight}
-                className="flex flex-1 flex-row items-center justify-center min-w-[112px] min-h-16 mt-4 rounded-full overflow-hidden"
+                className="flex flex-1 flex-row items-center -ml-2 gap-x-2 justify-center min-w-[102px] min-h-16 mt-4 rounded-full overflow-hidden"
             >
                 <Image source={icon} tintColor="#fff" className="size-5" />
-                <Text className="text-white font-semibold ml-2 text-base">{name}</Text>
+                <Text className="text-white font-semibold text-base text-center">{name}</Text>
             </ImageBackground>
         )
     }
@@ -83,7 +83,7 @@ const _Layout = () => {
             <Tabs.Screen
                 name={'saved'}
                 options={{
-                    tabBarLabel: 'Saved',
+                    title: 'Saved',
                     headerShown: false,
                     tabBarIcon: ({ focused }) => (
                         <TabIcon
@@ -97,7 +97,7 @@ const _Layout = () => {
             <Tabs.Screen
                 name={'profile'}
                 options={{
-                    tabBarLabel: 'Profile',
+                    title: 'Profile',
                     headerShown: false,
                     tabBarIcon: ({ focused }) => (
                         <TabIcon

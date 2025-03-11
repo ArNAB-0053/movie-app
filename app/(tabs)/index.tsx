@@ -71,7 +71,7 @@ const Index = () => {
                                 Trending Movies
                             </Text>
                             <FlatList
-                                data={trending}
+                                data={trending && trending.slice(0,10)}
                                 renderItem={({ item, index }) => (
                                     <TrendingCard {...item} rank={index+1} />
                                 )}
