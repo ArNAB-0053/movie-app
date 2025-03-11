@@ -10,14 +10,13 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { icons } from "@/constants/icons";
-import {fetchMovieDetails, fetchRecommendedMovies} from "@/services/api";
+import {fetchMovieDetails, fetchRecommendedMovies, fetchVideos, fetchVideosById} from "@/services/api";
 import useFetch from "@/services/useFetch";
 import Svg, { Circle } from "react-native-svg";
 import Animated, { useSharedValue, useAnimatedProps, withTiming } from "react-native-reanimated";
 import { useEffect } from "react";
-import TrendingCard from "@/components/trending-card";
-import MovieCard from "@/components/movie-card";
 import RecommendationCard from "@/components/recommendation-card";
+import VideoCard from "@/components/video-card";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -81,24 +80,39 @@ const RatingCircle = ({ rating }: { rating: number }) => {
     );
 };
 
+const Loading = () => {
+    return (
+        <SafeAreaView className="bg-primary flex-1">
+            <ActivityIndicator />
+        </SafeAreaView>
+    )
+}
 
 const Details = () => {
     const router = useRouter();
     const { id } = useLocalSearchParams();
 
-    const { data: movie, loading } = useFetch(() =>
+    const { data: movie, loading, refetch: refetchMovie } = useFetch(() =>
         fetchMovieDetails(id as string)
     );
 
-    const { data: recommendedMovies, loading: rLoading } = useFetch(() =>
+    const { data: recommendedMovies, loading: rLoading, refetch: refetchRecommended } = useFetch(() =>
         fetchRecommendedMovies(id as string)
     );
 
+    const { data: videos, loading: vLoading, refetch: refetchVideos } = useFetch(() =>
+        fetchVideos(id as string)
+    );
+
+    useEffect(() => {
+        refetchMovie();
+        refetchRecommended();
+        refetchVideos();
+    }, [id as string]);
+
     if (loading)
         return (
-            <SafeAreaView className="bg-primary flex-1">
-                <ActivityIndicator />
-            </SafeAreaView>
+            <Loading />
         );
 
     return (
@@ -161,6 +175,32 @@ const Details = () => {
                             />
                         </View>
                     </TouchableOpacity>
+
+                    {vLoading ? (
+                        <Loading />
+                    ): (
+                        <FlatList
+                            data={videos
+                                ?.filter(video => video.type === "Trailer") // only trailers
+                                .sort((a, b) => {
+                                    const dateA = new Date(a.published_at || "2000-01-01").getTime();
+                                    const dateB = new Date(b.published_at || "2000-01-01").getTime();
+                                    return dateB - dateA;
+                                })
+                                .slice(0, 5)}
+                            renderItem={({ item }) => (
+                                <VideoCard video={item} />
+                            )}
+                            keyExtractor={(item) => item.id.toString()}
+                            horizontal={true}
+                            className="mt-2"
+                            initialNumToRender={3}
+                            ListEmptyComponent={
+                                <Text className="text-gray-300/70 italic text-sm -ml-0.5"> No videos available </Text>
+                            }
+                        />
+                    )}
+
                     <MovieInfo label="Overview" value={movie?.overview} />
                     <MovieInfo
                         label="Genres"
@@ -190,30 +230,39 @@ const Details = () => {
 
                     <Text className="text-light-200 font-normal mt-5 mb-2 text-md">Recommended Movies</Text>
 
-                    <FlatList
-                        data={recommendedMovies}
-                        renderItem={({ item, index }) => (
-                            <RecommendationCard {...item} />
-                        )}
-                        keyExtractor={(item) => item.id.toString()}
-                        horizontal={true}
-                        className="mt-2"
-                        initialNumToRender={3}
-                    />
+                    {rLoading ? (
+                        <Loading />
+                    ): (
+                        <FlatList
+                            data={recommendedMovies && recommendedMovies.slice(0,10)}
+                            renderItem={({ item }) => (
+                                <RecommendationCard {...item} />
+                            )}
+                            keyExtractor={(item) => item.id.toString()}
+                            horizontal={true}
+                            className="mt-2"
+                            initialNumToRender={3}
+                            ListEmptyComponent={
+                                 <Text className="text-gray-300/70 italic text-sm -ml-0.5"> No recommendation available </Text>
+                            }
+                        />
+                    )}
+
                 </View>
             </ScrollView>
 
             <TouchableOpacity
-                className="absolute bottom-5 left-0 right-0 mx-5 bg-accent rounded-lg py-3.5 flex flex-row items-center justify-center z-50"
+                className="absolute bottom-3 left-0 right-0 mx-5 ba bg-accent rounded-lg py-3.5 flex flex-row items-center justify-center z-50"
                 onPress={router.back}
             >
                 <Image
-                    source={icons.arrow}
-                    className="size-5 mr-1 mt-0.5 rotate-180"
+                    source={icons.home}
+                    className="size-5 mr-2 "
                     tintColor="#fff"
                 />
-                <Text className="text-white font-semibold text-base">Go Back</Text>
+                <Text className="text-white font-semibold text-base">Go To Home</Text>
             </TouchableOpacity>
+                <View className="bg-black/50 z-40 w-full h-10 absolute bottom-0 left-0 "></View>
         </View>
     );
 };

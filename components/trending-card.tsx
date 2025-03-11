@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import {Link, router} from "expo-router";
 import { Text, Image, TouchableOpacity, View, StyleSheet } from "react-native";
 import { icons } from "@/constants/icons";
 import { BlurView } from "expo-blur";
@@ -18,6 +18,11 @@ const TrendingCard = ({
         <Link href={`/movie/${id}`} asChild>
             <TouchableOpacity
                 className="w-[220px] mr-6 mb-8"
+                onPress={() => {
+                    console.log(`Navigating to: /movie/${id}`);
+                    // You could also try manual navigation here as a test
+                    router.push(`/movie/${id}`);
+                }}
                 style={styles.cardShadow}
             >
                 {/* Card Container with Subtle Border */}
