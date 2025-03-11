@@ -4,17 +4,20 @@ import {
     Image,
     ActivityIndicator,
     ScrollView,
-    TouchableOpacity,
+    TouchableOpacity, FlatList,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { icons } from "@/constants/icons";
-import { fetchMovieDetails } from "@/services/api";
+import {fetchMovieDetails, fetchRecommendedMovies} from "@/services/api";
 import useFetch from "@/services/useFetch";
 import Svg, { Circle } from "react-native-svg";
 import Animated, { useSharedValue, useAnimatedProps, withTiming } from "react-native-reanimated";
 import { useEffect } from "react";
+import TrendingCard from "@/components/trending-card";
+import MovieCard from "@/components/movie-card";
+import RecommendationCard from "@/components/recommendation-card";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -25,8 +28,8 @@ interface MovieInfoProps {
 
 const MovieInfo = ({ label, value }: MovieInfoProps) => (
     <View className="flex-col items-start justify-center mt-5">
-        <Text className="text-light-200 font-normal text-sm">{label}</Text>
-        <Text className="text-light-100 font-bold text-sm mt-2">
+        <Text className="text-light-200 font-semibold text-md">{label}</Text>
+        <Text className="text-light-100 font-normal text-sm mt-2">
             {value || "N/A"}
         </Text>
     </View>
@@ -73,7 +76,7 @@ const RatingCircle = ({ rating }: { rating: number }) => {
                     strokeLinecap="round"
                 />
             </Svg>
-            <Text className="absolute text-white font-bold text-lg">{percentage}%</Text>
+            <Text className="absolute text-white font-bold text-lg">{Math.floor(percentage)}%</Text>
         </View>
     );
 };
@@ -85,6 +88,10 @@ const Details = () => {
 
     const { data: movie, loading } = useFetch(() =>
         fetchMovieDetails(id as string)
+    );
+
+    const { data: recommendedMovies, loading: rLoading } = useFetch(() =>
+        fetchRecommendedMovies(id as string)
     );
 
     if (loading)
@@ -179,6 +186,19 @@ const Details = () => {
                             movie?.production_companies?.map((c) => c.name).join(" • ") ||
                             "N/A"
                         }
+                    />
+
+                    <Text className="text-light-200 font-normal mt-5 mb-2 text-md">Recommended Movies</Text>
+
+                    <FlatList
+                        data={recommendedMovies}
+                        renderItem={({ item, index }) => (
+                            <RecommendationCard {...item} />
+                        )}
+                        keyExtractor={(item) => item.id.toString()}
+                        horizontal={true}
+                        className="mt-2"
+                        initialNumToRender={3}
                     />
                 </View>
             </ScrollView>

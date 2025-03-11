@@ -48,3 +48,21 @@ export const fetchMovieDetails = async (movieId: string) : Promise<MovieDetails>
         throw new Error("Could not fetch movie details from API")
     }
 }
+
+export const fetchRecommendedMovies = async (movieId: string) : Promise<MovieDetails> => {
+    try {
+        const res = await fetch(`${TMDB_CONFIG.BASE_URL}/movie/${movieId}/recommendations?language=en-US&page=1`, {
+            method: 'GET',
+            headers: TMDB_CONFIG.headers,
+        })
+
+        if (!res.ok) {
+            throw new Error("Could not fetch movie details from API")
+        }
+        const recommendedMovies = await res.json();
+        return recommendedMovies.results;
+    } catch (err) {
+        console.error(err)
+        throw new Error("Could not fetch movie details from API")
+    }
+}
