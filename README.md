@@ -1,4 +1,4 @@
-# MovieWithPopcorn 🍿🎬
+# MovieWithPopcorn
 
 ## Overview
 MovieWithPopcorn is a React Native movie app that provides information about movies using the TMDB API. The app allows users to browse, view details, and watch trailers of their favorite movies in a seamless and engaging UI.
